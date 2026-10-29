@@ -5,7 +5,7 @@ window.PANORAMAS = [
     "title": "Sample 1"
   },
   {
-    "src": "images/1.jpg",
+    "src": "images/2.jpg",
     "title": "Sample 2"
   }
 ];
