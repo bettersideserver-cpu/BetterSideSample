@@ -2,7 +2,9 @@
   'use strict';
   const byId = id => document.getElementById(id);
   const status = byId('status');
-  const controls = [...document.querySelectorAll('.tools button')];
+  const povSlider = byId('pov-slider');
+  const povValue = byId('pov-value');
+  const controls = [...document.querySelectorAll('.tools button'), byId('pov-slider')];
   const entries = (Array.isArray(window.PANORAMAS) ? window.PANORAMAS : [])
     .filter(item => item && typeof item.src === 'string' && item.src.trim());
   const number = value => String(value).padStart(2, '0');
@@ -44,12 +46,25 @@
   select(0);
   try {
     viewer = pannellum.viewer('panorama', {
-      default: { firstScene: '0', autoLoad: true, showControls: false, hfov: 100, minHfov: 40, maxHfov: 120, sceneFadeDuration: 250 }, scenes
+      default: { firstScene: '0', autoLoad: true, showControls: false, hfov: 100, minHfov: 40, maxHfov: 160, sceneFadeDuration: 250 }, scenes
     });
     viewer.on('scenechange', id => select(Number(id)));
-    viewer.on('load', () => { status.hidden = true; enable(true); });
+    viewer.on('load', () => { status.hidden = true; enable(true); syncPov(viewer.getHfov()); });
+    viewer.on('zoomchange', hfov => syncPov(hfov));
     viewer.on('error', () => { enable(false); message('Unable to display this panorama. Check the image path and use a 360° equirectangular image, or choose another image below.'); });
   } catch (error) { message('This browser could not start the 360° viewer. Try a browser with WebGL enabled.'); return; }
+  function syncPov(hfov) {
+    const value = Math.round(hfov);
+    povSlider.value = String(value);
+    povValue.value = `${value}°`;
+    povValue.textContent = `${value}°`;
+  }
+  povSlider.addEventListener('input', () => {
+    const hfov = Number(povSlider.value);
+    povValue.value = `${hfov}°`;
+    povValue.textContent = `${hfov}°`;
+    viewer.setHfov(hfov);
+  });
   byId('zoom-in').addEventListener('click', () => viewer.setHfov(viewer.getHfov() - 10));
   byId('zoom-out').addEventListener('click', () => viewer.setHfov(viewer.getHfov() + 10));
   byId('rotate').addEventListener('click', () => {
