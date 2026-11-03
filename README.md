@@ -1,6 +1,6 @@
 # 360° Panorama Viewer
 
-A static, mobile-friendly panorama viewer with a numbered image bar, drag/touch navigation, zoom, auto rotation, and fullscreen where supported. The Pannellum 2.5.6 library and its license are included in `vendor/`; no CDN or API key is required.
+A static, mobile-friendly panorama viewer with a numbered image bar, drag/touch navigation, zoom, an adjustable POV (horizontal field-of-view) slider (40°–160°), auto rotation, and fullscreen where supported. The Pannellum 2.5.6 library and its license are included in `vendor/`; no CDN or API key is required.
 
 ## Host on GitHub Pages (automatic image discovery)
 

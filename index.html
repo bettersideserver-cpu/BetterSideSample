@@ -22,6 +22,11 @@
         <button id="rotate" type="button" aria-label="Auto rotate" aria-pressed="false" title="Auto rotate">↻</button>
         <button id="fullscreen" type="button" aria-label="Toggle fullscreen" title="Fullscreen">⛶</button>
       </div>
+      <div class="pov-control" aria-label="Point of view control">
+        <div class="pov-heading"><label for="pov-slider">POV</label><output id="pov-value" for="pov-slider">100°</output></div>
+        <input id="pov-slider" type="range" min="40" max="160" step="1" value="100" aria-label="Adjust point of view">
+        <div class="pov-scale"><span>Zoom in</span><span>Wide</span></div>
+      </div>
       <div id="status" role="status" aria-live="polite">Loading panorama…</div>
       <p class="hint">Drag to explore <span>·</span> Scroll or pinch to zoom</p>
     </section>
