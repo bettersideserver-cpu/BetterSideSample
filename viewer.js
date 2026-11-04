@@ -46,7 +46,7 @@
   select(0);
   try {
     viewer = pannellum.viewer('panorama', {
-      default: { firstScene: '0', autoLoad: true, showControls: false, hfov: 110, minHfov: 40, maxHfov: 160, mouseZoom: false, touchZoom: false, sceneFadeDuration: 250 }, scenes
+      default: { firstScene: '0', autoLoad: true, showControls: false, hfov: 110, minHfov: 40, maxHfov: 160, mouseZoom: true, touchZoom: true, sceneFadeDuration: 250 }, scenes
     });
     viewer.on('scenechange', id => select(Number(id)));
     viewer.on('load', () => { status.hidden = true; enable(true); syncPov(viewer.getHfov()); });
