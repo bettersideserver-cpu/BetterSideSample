@@ -46,7 +46,7 @@
   select(0);
   try {
     viewer = pannellum.viewer('panorama', {
-      default: { firstScene: '0', autoLoad: true, showControls: false, hfov: 100, minHfov: 40, maxHfov: 160, sceneFadeDuration: 250 }, scenes
+      default: { firstScene: '0', autoLoad: true, showControls: false, hfov: 110, minHfov: 40, maxHfov: 160, mouseZoom: false, touchZoom: false, sceneFadeDuration: 250 }, scenes
     });
     viewer.on('scenechange', id => select(Number(id)));
     viewer.on('load', () => { status.hidden = true; enable(true); syncPov(viewer.getHfov()); });
@@ -63,8 +63,40 @@
     const hfov = Number(povSlider.value);
     povValue.value = `${hfov}°`;
     povValue.textContent = `${hfov}°`;
-    viewer.setHfov(hfov);
+    viewer.setHfov(hfov, false);
   });
+  const povControl = document.querySelector('.pov-control');
+  function togglePov() {
+    povControl.hidden = !povControl.hidden;
+    if (povControl.hidden) viewer.setHfov(110, false);
+    syncPov(viewer.getHfov());
+  }
+  // Discreet shortcut: no visible toggle is added to the visitor's controls.
+  document.addEventListener('keydown', event => {
+    if (event.repeat || event.target.closest('input, textarea, select, [contenteditable="true"]')) return;
+    if (event.shiftKey && !event.ctrlKey && !event.altKey && !event.metaKey && event.code === 'KeyF') {
+      event.preventDefault();
+      togglePov();
+    }
+  });
+  let badgeTaps = 0;
+  let lastBadgeTap = 0;
+  document.querySelector('.heading .badge').addEventListener('click', () => {
+    const now = Date.now();
+    badgeTaps = now - lastBadgeTap < 600 ? badgeTaps + 1 : 1;
+    lastBadgeTap = now;
+    if (badgeTaps === 3) { badgeTaps = 0; togglePov(); }
+  });
+  // Arrow keys on the slider should not also pan the scene.
+  povSlider.addEventListener('keydown', event => {
+    if (event.shiftKey && event.code === 'KeyF' && !event.repeat) {
+      event.preventDefault();
+      togglePov();
+      byId('panorama').focus();
+    }
+    event.stopPropagation();
+  });
+  povSlider.addEventListener('keyup', event => event.stopPropagation());
   byId('zoom-in').addEventListener('click', () => viewer.setHfov(viewer.getHfov() - 10));
   byId('zoom-out').addEventListener('click', () => viewer.setHfov(viewer.getHfov() + 10));
   byId('rotate').addEventListener('click', () => {
